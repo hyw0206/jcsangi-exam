@@ -52,7 +52,13 @@ export default function Home() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-
+    
+    const metaTag = document.createElement("meta");
+    metaTag.name = "viewport";
+    metaTag.content = "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes";
+    
+    // head에 meta 태그 추가
+    document.head.appendChild(metaTag);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
     };
