@@ -3,6 +3,7 @@
 import { useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "sonner";
 import parse from 'html-react-parser';
+import Head from "next/head";
 
 interface Question {
   question: string;
@@ -270,37 +271,42 @@ export default function Home() {
   const themes = ["정보시스템 기반 기술", "프로그래밍 언어 활용", "데이터베이스 활용"];
 
   return (
-    <div className="flex flex-col justify-center items-center gap-4 p-4">
-      <Toaster position="top-center"/>
-      <h2 className="text-2xl font-bold">
-        {currentTheme}과목 : {themes[currentTheme - 1]}
-      </h2>
-      <div className="border p-4 rounded-md max-w-xl w-xl">
-        <p>{currentQuestion.date}회 출제 문제</p>
-        <p className="text-lg font-semibold">
-          {currentQuestionNumber}. {parse(currentQuestion.question)}
-        </p>
-        <ul className="mt-2">
-          {currentQuestion.answers.map((answer, index) => (
-            <li key={index} className="flex items-center mb-1">
-              <button
-                ref={(el) => {
-                  if (el) {
-                    answerButtonsRef.current[index] = el;
-                  }
-                }}
-                onClick={() => handleAnswerClick(index + 1)}
-                className={`bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded mr-2 ${
-                  activeButtonIndex === index ? "focus:outline-none focus:ring focus:ring-blue-300" : ""
-                }`}
-              >
-                {index + 1}
-              </button>
-              {parse(answer)}
-            </li>
-          ))}
-        </ul>
+    <>
+      <Head>
+        <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes" />
+      </Head>
+      <div className="flex flex-col justify-center items-center gap-4 p-4">
+        <Toaster position="top-center"/>
+        <h2 className="text-2xl font-bold">
+          {currentTheme}과목 : {themes[currentTheme - 1]}
+        </h2>
+        <div className="border p-4 rounded-md max-w-xl w-xl">
+          <p>{currentQuestion.date}회 출제 문제</p>
+          <p className="text-lg font-semibold">
+            {currentQuestionNumber}. {parse(currentQuestion.question)}
+          </p>
+          <ul className="mt-2">
+            {currentQuestion.answers.map((answer, index) => (
+              <li key={index} className="flex items-center mb-1">
+                <button
+                  ref={(el) => {
+                    if (el) {
+                      answerButtonsRef.current[index] = el;
+                    }
+                  }}
+                  onClick={() => handleAnswerClick(index + 1)}
+                  className={`bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded mr-2 ${
+                    activeButtonIndex === index ? "focus:outline-none focus:ring focus:ring-blue-300" : ""
+                  }`}
+                >
+                  {index + 1}
+                </button>
+                {parse(answer)}
+              </li>
+            ))}
+          </ul>
+        </div>
       </div>
-    </div>
+    </>
   );
 }
