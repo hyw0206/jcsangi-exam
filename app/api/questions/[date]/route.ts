@@ -4,10 +4,10 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { date?: string } } // 타입 수정
+  { params }: { params: { date: string } } // Next.js 15에서 요구하는 정확한 타입
 ) {
   try {
-    if (!params?.date) {
+    if (!params.date) {
       return NextResponse.json(
         { error: "Date parameter is missing." },
         { status: 400 }
@@ -17,7 +17,7 @@ export async function GET(
     const filePath = path.join(process.cwd(), "data", `${params.date}.json`);
 
     try {
-      await fs.access(filePath);
+      await fs.access(filePath); // 파일 존재 여부 확인
     } catch {
       return NextResponse.json({ error: "File not found." }, { status: 404 });
     }
