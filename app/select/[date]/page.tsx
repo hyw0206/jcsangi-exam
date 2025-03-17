@@ -2,8 +2,9 @@
 
 import { useEffect, useState, useRef } from "react";
 import { toast, Toaster } from "sonner";
-import parse from 'html-react-parser';
+import parse from "html-react-parser";
 import Head from "next/head";
+import { useParams } from "next/navigation";
 
 interface Question {
   question: string;
@@ -14,11 +15,10 @@ interface Question {
   explanation?: string;
 }
 
-export default function Home() {
-  const [questions, setQuestions] = useState<Record<number, Question[]>>({});
+export default function SelectedYearQuiz() {
+  const [questionsByTheme, setQuestionsByTheme] = useState<Record<number, Question[]>>({});
   const [currentTheme, setCurrentTheme] = useState<number | null>(null);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
-  const [currentQuestionNumber, setCurrentQuestionNumber] = useState(1);
   const [results, setResults] = useState<
     {
       question: Question;
@@ -29,62 +29,68 @@ export default function Home() {
   const [activeButtonIndex, setActiveButtonIndex] = useState<number | null>(null);
   const answerButtonsRef = useRef<(HTMLButtonElement | null)[]>([]);
   const [showResultPage, setShowResultPage] = useState(false);
-  const [loading, setLoading] = useState(true);
+  const params = useParams();
+  const { date } = params;
+
 
   useEffect(() => {
-    let isMounted = true; 
+    async function fetchQuestions() {
+      try {
+        const res = await fetch(`/api/questions/${date}`);
+        if (!res.ok) {
+          const errorData = await res.json();
+          throw new Error(`HTTP error! status: ${res.status}, message: ${errorData.error}`);
+        }
+        const data: Question[] = await res.json();
 
-    fetch("/api/questions")
-      .then((res) => res.json())
-      .then((data) => {
-        if (isMounted) { 
-          if (Array.isArray(data)) {
-            console.error("API returned an array. Expected an object.");
-            setLoading(false);
-          } else {
-            setQuestions(data);
-            const firstTheme = Object.keys(data)[0];
-            setCurrentTheme(Number(firstTheme));
+        // Group questions by theme
+        const groupedQuestions: Record<number, Question[]> = {};
+        data.forEach(question => {
+          if (!groupedQuestions[question.theme]) {
+            groupedQuestions[question.theme] = [];
           }
-          setLoading(false);
+          groupedQuestions[question.theme].push(question);
+        });
+
+        setQuestionsByTheme(groupedQuestions);
+
+        // Set the initial theme if questions are available
+        const firstTheme = Object.keys(groupedQuestions)[0];
+        if (firstTheme) {
+            setCurrentTheme(Number(firstTheme));
         }
-      })
-      .catch((err) => {
-        if (isMounted) {
-          console.error("Failed to fetch questions:", err);
-          setLoading(false);
-        }
-      });
+
+      } catch (err) {
+        console.error("Failed to fetch questions:", err);
+      }
+    }
+
+    fetchQuestions();
 
     const handleKeyDown = (event: KeyboardEvent) => {
-      if (event.key >= "1" && event.key <= "4") {
-        const index = parseInt(event.key) - 1;
-        setActiveButtonIndex(index);
-        if (answerButtonsRef.current[index]) {
-          answerButtonsRef.current[index]?.focus();
+        if (event.key >= "1" && event.key <= "4") {
+          const index = parseInt(event.key) - 1;
+          setActiveButtonIndex(index);
+          if (answerButtonsRef.current[index]) {
+            answerButtonsRef.current[index]?.focus();
+          }
+        } else if (event.key === "Enter" && activeButtonIndex !== null) {
+          handleAnswerClick(activeButtonIndex);
         }
-      } else if (event.key === "Enter" && activeButtonIndex !== null) {
-        handleAnswerClick(activeButtonIndex);
-      }
-    };
-
-    window.addEventListener("keydown", handleKeyDown);
-    const metaTag = document.createElement("meta");
-    metaTag.name = "viewport";
-    metaTag.content = "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes";
-
-    document.head.appendChild(metaTag);
+      };
+  
+      window.addEventListener("keydown", handleKeyDown);
 
     return () => {
-      isMounted = false;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, []);
+  }, [date]);
+
 
 
   const handleAnswerClick = (selectedAnswerIndex: number) => {
-    if (currentTheme && questions[currentTheme]) {
-      const currentQuestion = questions[currentTheme][currentQuestionIndex];
+    if (currentTheme && questionsByTheme[currentTheme]) {
+      const currentQuestion = questionsByTheme[currentTheme][currentQuestionIndex];
       const isCorrect = selectedAnswerIndex === currentQuestion.correct;
 
       setResults([
@@ -96,7 +102,7 @@ export default function Home() {
         },
       ]);
       toast(isCorrect ? "✅ 정답입니다!" : "❌ 오답입니다!", {
-        description: `정답: ${currentQuestion.correct}번`,
+        description: `정답: ${currentQuestion.answers[currentQuestion.correct -1]}`, // Corrected description
         style: { backgroundColor: isCorrect ? "#4CAF50" : "#F44336", color: "#fff" },
         duration: 1000,
       });
@@ -105,20 +111,20 @@ export default function Home() {
     }
   };
 
+
+
   const handleNextQuestion = () => {
     if (currentTheme) {
-      if (currentQuestionIndex < questions[currentTheme].length - 1) {
+      if (currentQuestionIndex < questionsByTheme[currentTheme].length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setCurrentQuestionNumber(currentQuestionNumber + 1);
-        setActiveButtonIndex(null);
+        setActiveButtonIndex(null); // Reset active button
       } else {
-        const themes = Object.keys(questions).map(Number);
+        const themes = Object.keys(questionsByTheme).map(Number);
         const currentThemeIndex = themes.indexOf(currentTheme);
         if (currentThemeIndex < themes.length - 1) {
           setCurrentTheme(themes[currentThemeIndex + 1]);
-          setCurrentQuestionIndex(0);
-          setCurrentQuestionNumber(currentQuestionNumber + 1);
-          setActiveButtonIndex(null);
+          setCurrentQuestionIndex(0); // Reset question index for new theme
+          setActiveButtonIndex(null); // Reset active button
         } else {
           toast("🎉 모든 문제를 풀었습니다!", {
             description: "결과 페이지로 이동합니다.",
@@ -129,6 +135,8 @@ export default function Home() {
       }
     }
   };
+
+
 
   const showResults = () => {
     const wrongAnswers = results.filter((result) => !result.isCorrect);
@@ -212,6 +220,7 @@ export default function Home() {
         >
           다시 풀기
         </button>
+
         {wrongAnswers.length > 0 && (
           <div className="max-w-xl w-full mt-4">
             <h3 className="text-2xl font-semibold">틀린 문제</h3>
@@ -237,8 +246,8 @@ export default function Home() {
                             </li>
                           ))}
                         </ul>
-                        <p>입력한 답: {result.selectedAnswer} </p>
-                        <p>정답: {result.question.correct}</p>
+                        <p>입력한 답: {result.selectedAnswer ? result.question.answers[result.selectedAnswer - 1] : "선택 안함"}</p>
+                        <p>정답: {result.question.answers[result.question.correct - 1]}</p>
                       </li>
                     ))}
                   </ul>
@@ -273,7 +282,7 @@ export default function Home() {
                             </li>
                           ))}
                         </ul>
-                        <p>정답: {result.question.correct}</p>
+                        <p>정답: {result.question.answers[result.question.correct - 1]}</p>
                       </li>
                     ))}
                   </ul>
@@ -290,16 +299,13 @@ export default function Home() {
     return showResults();
   }
 
-  if (loading) { 
+  if (!currentTheme || !questionsByTheme[currentTheme]) {
     return <div className="flex justify-center items-center h-screen">Loading...</div>;
   }
 
-  if (!currentTheme || !questions[currentTheme]) {
-    return <div className="flex justify-center items-center h-screen">No questions found.</div>;
-  }
-
-  const currentQuestion = questions[currentTheme][currentQuestionIndex];
-  const themes = ["정보시스템 기반 기술", "프로그래밍 언어 활용", "데이터베이스 활용"];
+    const currentQuestion = questionsByTheme[currentTheme][currentQuestionIndex];
+    const currentQuestionNumber = results.length + 1; // 전체 문제에서의 현재 문제 번호
+    const themes = ["정보시스템 기반 기술", "프로그래밍 언어 활용", "데이터베이스 활용"];
 
   return (
     <>
@@ -314,7 +320,7 @@ export default function Home() {
         <div className="border p-4 rounded-md lg:max-w-full max-w-xl w-xl lg:text-lg text-2xl">
           <p>{currentQuestion.date}회 출제 문제</p>
           <p className="lg:text-2xl text-3xl font-semibold">
-            {currentQuestionNumber}. {parse(currentQuestion.question)}
+          {currentQuestionNumber}. {parse(currentQuestion.question)}
           </p>
           <ul className="mt-2">
             {currentQuestion.answers.map((answer, index) => (

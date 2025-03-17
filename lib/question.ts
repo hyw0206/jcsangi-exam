@@ -1,3 +1,4 @@
+import { NextResponse } from 'next/server';
 import fs from "fs";
 import path from "path";
 
@@ -9,8 +10,7 @@ interface Question {
 }
 
 // 여러 개의 JSON 파일에서 문제 불러오기
-const loadQuestions = (): Question[] => {
-  const files = ["2022-1.json", "2022-2.json", "2022-3.json"];
+const loadQuestions = (files: string[]): Question[] => {
   let allQuestions: Question[] = [];
 
   files.forEach((file) => {
@@ -35,8 +35,9 @@ const shuffleArray = <T>(array: T[]): T[] => {
 
 // 테마별로 20개씩 문제를 가져오기
 export const getQuestionsByTheme = (): Record<number, Question[]> => {
-  const allQuestions = loadQuestions();
-  const grouped: Record<number, Question[]> = { 1: [], 2: [], 3: []};
+  const files = ["2022-1.json", "2022-2.json", "2022-3.json"];
+  const allQuestions = loadQuestions(files);
+  const grouped: Record<number, Question[]> = { 1: [], 2: [], 3: [] };
 
   // 테마별로 분류
   allQuestions.forEach((q) => {
