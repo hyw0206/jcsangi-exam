@@ -285,7 +285,7 @@ export default function Home() {
       <h2 className="text-3xl font-bold">
         {currentTheme}과목 : {themes[currentTheme - 1]}
       </h2>
-      <div className="border p-4 rounded-md md:max-w-full max-w-xl w-xl md:text-lg text-3xl">
+      <div className="border p-4 rounded-md lg:max-w-full max-w-xl w-xl lg:text-lg text-2xl">
         <p>{currentQuestion.date}회 출제 문제</p>
         <p className="md:text-xl text-4xl font-semibold">
           {currentQuestionNumber}. {parse(currentQuestion.question)}
@@ -300,13 +300,13 @@ export default function Home() {
                   }
                 }}
                 onClick={() => handleAnswerClick(index + 1)}
-                className={`bg-gray-200 hover:bg-gray-300 px-2 py-2 rounded mr-2 md:text-2xl text-5xl ${
+                className={`bg-gray-200 hover:bg-gray-300 px-2 py-2 rounded mr-2 lg:text-2xl text-4xl ${
                   activeButtonIndex === index ? "focus:outline-none focus:ring focus:ring-blue-300" : ""
                 }`}
               >
                 {index + 1}
               </button>
-              <span className="md:text-xl text-4xl">
+              <span className="lg:text-xl text-3xl">
                 {parse(answer)}
               </span>
             </li>
