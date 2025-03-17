@@ -10,7 +10,7 @@ interface Question {
 
 // 여러 개의 JSON 파일에서 문제 불러오기
 const loadQuestions = (): Question[] => {
-  const files = ["2022-1.json"];
+  const files = ["2022-1.json", "2022-2.json", "2022-3.json"];
   let allQuestions: Question[] = [];
 
   files.forEach((file) => {

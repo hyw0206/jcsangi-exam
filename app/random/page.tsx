@@ -287,7 +287,7 @@ export default function Home() {
       </h2>
       <div className="border p-4 rounded-md lg:max-w-full max-w-xl w-xl lg:text-lg text-2xl">
         <p>{currentQuestion.date}회 출제 문제</p>
-        <p className="md:text-xl text-4xl font-semibold">
+        <p className="lg:text-2xl text-3xl font-semibold">
           {currentQuestionNumber}. {parse(currentQuestion.question)}
         </p>
         <ul className="mt-2">

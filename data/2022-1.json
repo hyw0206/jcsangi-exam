@@ -266,12 +266,17 @@
     "date": "2022-1"
   },
   {
-    "question": "HTML에서 다음과 같이 frameset 태그를 사용했을 때 나타나는 결과로 올바른 것은? <div class='p-4'><code>&lt;FRAMESET cols='50%, 50%'&gt;<br />&lt;FRAMESET rows='50%, 50%'&gt;<br />&lt;/FRAMESET&gt;<br />&lt;/FRAMESET&gt;</code></div>",
-    "answers": ["<img src='https://i.imgur.com/ni6Jiz8.png'/>", "<img src='https://i.imgur.com/cnyYiDp.png' />", "<img src='https://i.imgur.com/UqExAer.png' />", "<img src='https://i.imgur.com/BoMT8TV.png' />"],
+    "question": "HTML에서 다음과 같이 frameset 태그를 사용했을 때 나타나는 결과로 올바른 것은? <br /><br /><div className='border p-4 text-base'>&lt;FRAMESET cols='50%, 50%'&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;FRAMESET rows='50%, 50%'&gt;<br />&nbsp;&nbsp;&nbsp;&nbsp;&lt;/FRAMESET&gt;<br />&lt;/FRAMESET&gt;</div>",
+    "answers": [
+        "<img src='https://i.imgur.com/ni6Jiz8.png'/>",
+        "<img src='https://i.imgur.com/cnyYiDp.png' />",
+        "<img src='https://i.imgur.com/UqExAer.png' />",
+        "<img src='https://i.imgur.com/BoMT8TV.png' />"
+    ],
     "correct": 2,
     "theme": 2,
     "date": "2022-1"
-  },
+},
     {
     "question": "다음 중 C 언어에서 수학 함수를 사용하기 위해 추가해야 하는 라이브러리는?",
     "answers": ["stdio.h", "math.h", "stdlib.h", "time.h"],
@@ -325,17 +330,17 @@
     "date": "2022-1"
   },
   {
-    "question": "다음 C언어 프로그램이 실행되었을 때의 결과는? <br /> <br /> <div classname='p-4'>#include <stdio.h> <br />void func(int* p) {<br /> *p = *p - 5; <br />} <br />main() { <br />int a = 13; <br />func(&a); <br />printf(\"%d\", a);<br /> }</div>",
+    "question": "다음 C언어 프로그램이 실행되었을 때의 결과는? <br /><br /><div className='border p-4 text-base'>#include &lt;stdio.h&gt; <br />void func(int* p) {<br />&nbsp;&nbsp;&nbsp;&nbsp;*p = *p - 5;<br />}<br />main() {<br />&nbsp;&nbsp;&nbsp;&nbsp;int a = 13;<br />&nbsp;&nbsp;&nbsp;&nbsp;func(&amp;a);<br />&nbsp;&nbsp;&nbsp;&nbsp;printf(&quot;%d&quot;, a);<br />}</div>",
     "answers": [
-      "-5",
-      "3",
-      "8",
-      "13"
+        "-5",
+        "3",
+        "8",
+        "13"
     ],
     "correct": 3,
     "theme": 2,
     "date": "2022-1"
-  },
+},
   {
     "question": "추상 클래스에 대한 설명으로 옳은 것은?",
     "answers": [
