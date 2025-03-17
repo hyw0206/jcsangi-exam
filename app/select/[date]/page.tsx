@@ -43,7 +43,7 @@ export default function SelectedYearQuiz() {
         }
         const data: Question[] = await res.json();
 
-        // Group questions by theme
+
         const groupedQuestions: Record<number, Question[]> = {};
         data.forEach(question => {
           if (!groupedQuestions[question.theme]) {
@@ -54,7 +54,7 @@ export default function SelectedYearQuiz() {
 
         setQuestionsByTheme(groupedQuestions);
 
-        // Set the initial theme if questions are available
+    
         const firstTheme = Object.keys(groupedQuestions)[0];
         if (firstTheme) {
             setCurrentTheme(Number(firstTheme));
@@ -102,7 +102,7 @@ export default function SelectedYearQuiz() {
         },
       ]);
       toast(isCorrect ? "✅ 정답입니다!" : "❌ 오답입니다!", {
-        description: `정답: ${currentQuestion.answers[currentQuestion.correct -1]}`, // Corrected description
+        description: `정답: ${currentQuestion.answers[currentQuestion.correct -1]}`, 
         style: { backgroundColor: isCorrect ? "#4CAF50" : "#F44336", color: "#fff" },
         duration: 1000,
       });
@@ -117,14 +117,14 @@ export default function SelectedYearQuiz() {
     if (currentTheme) {
       if (currentQuestionIndex < questionsByTheme[currentTheme].length - 1) {
         setCurrentQuestionIndex(currentQuestionIndex + 1);
-        setActiveButtonIndex(null); // Reset active button
+        setActiveButtonIndex(null); 
       } else {
         const themes = Object.keys(questionsByTheme).map(Number);
         const currentThemeIndex = themes.indexOf(currentTheme);
         if (currentThemeIndex < themes.length - 1) {
           setCurrentTheme(themes[currentThemeIndex + 1]);
-          setCurrentQuestionIndex(0); // Reset question index for new theme
-          setActiveButtonIndex(null); // Reset active button
+          setCurrentQuestionIndex(0); 
+          setActiveButtonIndex(null); 
         } else {
           toast("🎉 모든 문제를 풀었습니다!", {
             description: "결과 페이지로 이동합니다.",
@@ -246,8 +246,8 @@ export default function SelectedYearQuiz() {
                             </li>
                           ))}
                         </ul>
-                        <p>입력한 답: {result.selectedAnswer ? result.question.answers[result.selectedAnswer - 1] : "선택 안함"}</p>
-                        <p>정답: {result.question.answers[result.question.correct - 1]}</p>
+                        <p>입력한 답: {result.selectedAnswer}</p>
+                        <p>정답: {result.question.correct}</p>
                       </li>
                     ))}
                   </ul>
@@ -282,7 +282,7 @@ export default function SelectedYearQuiz() {
                             </li>
                           ))}
                         </ul>
-                        <p>정답: {result.question.answers[result.question.correct - 1]}</p>
+                        <p>정답: {result.question.correct}번</p>
                       </li>
                     ))}
                   </ul>
@@ -304,7 +304,7 @@ export default function SelectedYearQuiz() {
   }
 
     const currentQuestion = questionsByTheme[currentTheme][currentQuestionIndex];
-    const currentQuestionNumber = results.length + 1; // 전체 문제에서의 현재 문제 번호
+    const currentQuestionNumber = results.length + 1;
     const themes = ["정보시스템 기반 기술", "프로그래밍 언어 활용", "데이터베이스 활용"];
 
   return (

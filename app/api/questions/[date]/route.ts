@@ -1,21 +1,15 @@
 import path from "path";
 import fs from "fs/promises";
+import { NextResponse } from 'next/server'; 
 
 export async function GET(
   request: Request,
-  context: { params: { date?: string } }
+  { params }: { params: { date: string } } 
 ) {
   try {
-    const params = await context.params; // ✅ params를 비동기적으로 가져오기
 
-    if (!params?.date) {
-      return new Response(
-        JSON.stringify({ error: "Date parameter is missing." }),
-        {
-          status: 400,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+    if (!params.date) {
+      return NextResponse.json({ error: "Date parameter is missing." }, { status: 400 }); 
     }
 
     const filePath = path.join(process.cwd(), "data", `${params.date}.json`);
@@ -23,30 +17,16 @@ export async function GET(
     try {
       await fs.access(filePath);
     } catch {
-      return new Response(
-        JSON.stringify({ error: "File not found." }),
-        {
-          status: 404,
-          headers: { "Content-Type": "application/json" },
-        }
-      );
+      return NextResponse.json({ error: "File not found." }, { status: 404 }); 
     }
 
     const fileContent = await fs.readFile(filePath, "utf-8");
     const data = JSON.parse(fileContent);
 
-    return new Response(JSON.stringify(data), {
-      status: 200,
-      headers: { "Content-Type": "application/json" },
-    });
+    return NextResponse.json(data, { status: 200 }); 
+
   } catch (error) {
     console.error("Error reading file:", error);
-    return new Response(
-      JSON.stringify({ error: "Failed to read data." }),
-      {
-        status: 500,
-        headers: { "Content-Type": "application/json" },
-      }
-    );
+    return NextResponse.json({ error: "Failed to read data." }, { status: 500 });
   }
 }

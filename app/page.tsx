@@ -41,7 +41,7 @@ export default function Home() {
     <div className="flex flex-col justify-center items-center text-xl gap-4 p-4">
       <div>정보처리산업기사 최신 기출</div>
 
-      <div className="w-full max-w-md"> {/* Use max-w-md for a reasonable width */}
+      <div className="w-full max-w-md">
         <div className="text-lg font-semibold mb-2">문제 풀기 방법 선택</div>
 
         <div className="space-y-2">
@@ -66,7 +66,7 @@ export default function Home() {
         {selectedMod === "select" && (
           <div className="mt-4">
             <div className="text-lg font-semibold mb-2">회차 선택</div>
-            <div className="grid grid-cols-2 gap-2"> {/* Use a grid for better layout */}
+            <div className="grid grid-cols-2 gap-2">
               {yearOptions.map((year) => (
                 <button
                   key={year}
