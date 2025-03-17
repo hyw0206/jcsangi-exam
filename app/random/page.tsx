@@ -11,6 +11,7 @@ interface Question {
   correct: number;
   theme: number;
   date: string;
+  explanation?: string;
 }
 
 export default function Home() {
@@ -52,12 +53,10 @@ export default function Home() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
-    
     const metaTag = document.createElement("meta");
     metaTag.name = "viewport";
     metaTag.content = "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes";
     
-    // head에 meta 태그 추가
     document.head.appendChild(metaTag);
     return () => {
       window.removeEventListener("keydown", handleKeyDown);
@@ -278,41 +277,43 @@ export default function Home() {
 
   return (
     <>
-      <Head>
-        <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes" />
-      </Head>
-      <div className="flex flex-col justify-center items-center gap-4 p-4">
-        <Toaster position="top-center"/>
-        <h2 className="text-2xl font-bold">
-          {currentTheme}과목 : {themes[currentTheme - 1]}
-        </h2>
-        <div className="border p-4 rounded-md max-w-xl w-xl">
-          <p>{currentQuestion.date}회 출제 문제</p>
-          <p className="text-lg font-semibold">
-            {currentQuestionNumber}. {parse(currentQuestion.question)}
-          </p>
-          <ul className="mt-2">
-            {currentQuestion.answers.map((answer, index) => (
-              <li key={index} className="flex items-center mb-1">
-                <button
-                  ref={(el) => {
-                    if (el) {
-                      answerButtonsRef.current[index] = el;
-                    }
-                  }}
-                  onClick={() => handleAnswerClick(index + 1)}
-                  className={`bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded mr-2 ${
-                    activeButtonIndex === index ? "focus:outline-none focus:ring focus:ring-blue-300" : ""
-                  }`}
-                >
-                  {index + 1}
-                </button>
+    <Head>
+      <meta name="viewport" content="width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes" />
+    </Head>
+    <div className="flex flex-col justify-center items-center gap-4 p-4">
+      <Toaster position="top-center"/>
+      <h2 className="text-3xl font-bold">
+        {currentTheme}과목 : {themes[currentTheme - 1]}
+      </h2>
+      <div className="border p-4 rounded-md max-w-xl w-xl text-lg">
+        <p>{currentQuestion.date}회 출제 문제</p>
+        <p className="text-xl font-semibold">
+          {currentQuestionNumber}. {parse(currentQuestion.question)}
+        </p>
+        <ul className="mt-2">
+          {currentQuestion.answers.map((answer, index) => (
+            <li key={index} className="flex items-center mb-1 ">
+              <button
+                ref={(el) => {
+                  if (el) {
+                    answerButtonsRef.current[index] = el;
+                  }
+                }}
+                onClick={() => handleAnswerClick(index + 1)}
+                className={`bg-gray-200 hover:bg-gray-300 px-2 py-1 rounded mr-2 text-2xl ${
+                  activeButtonIndex === index ? "focus:outline-none focus:ring focus:ring-blue-300" : ""
+                }`}
+              >
+                {index + 1}
+              </button>
+              <span className="text-xl">
                 {parse(answer)}
-              </li>
-            ))}
-          </ul>
-        </div>
+              </span>
+            </li>
+          ))}
+        </ul>
       </div>
+    </div>
     </>
   );
 }
