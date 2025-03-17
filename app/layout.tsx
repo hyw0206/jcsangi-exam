@@ -22,6 +22,7 @@ export default function RootLayout({
         className={`antialiased`}
       >
         {children}
+        <div className="text-center">문제 저작권은 시나공에서 제공되었습니다.</div>
       </body>
     </html>
   );
