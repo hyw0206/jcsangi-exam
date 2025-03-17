@@ -225,7 +225,7 @@
   },
   {
     "question": "JavaScript에서 다음 그림과 같은 창을 띄우기 위해 사용한 명령어로 옳은 것은? <br /> <br /> <img src='https://i.imgur.com/N6GgWrm.png'/>",
-    "answers": ["alert('title','default')", "prompt('title','default')","alert('default','title')","alert('default','title')"],
+    "answers": ["alert('title','default')", "prompt('title','default')","alert('default','title')","prompt('default','title')"],
     "correct": 2,
     "theme": 2,
     "date": "2022-1"
