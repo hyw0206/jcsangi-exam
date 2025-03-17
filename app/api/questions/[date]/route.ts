@@ -4,20 +4,22 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { date: string } } // Next.js 15에서 요구하는 정확한 타입
+  { params }: { params: Record<string, string | undefined> } // 🔥 Next.js에서 요구하는 타입
 ) {
   try {
-    if (!params.date) {
+    const date = params?.date; // ✅ 타입 안전성 유지
+
+    if (!date) {
       return NextResponse.json(
         { error: "Date parameter is missing." },
         { status: 400 }
       );
     }
 
-    const filePath = path.join(process.cwd(), "data", `${params.date}.json`);
+    const filePath = path.join(process.cwd(), "data", `${date}.json`);
 
     try {
-      await fs.access(filePath); // 파일 존재 여부 확인
+      await fs.access(filePath);
     } catch {
       return NextResponse.json({ error: "File not found." }, { status: 404 });
     }
