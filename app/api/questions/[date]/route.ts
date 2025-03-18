@@ -4,10 +4,10 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { date?: string | undefined } } // ✅ Next.js가 예상하는 타입으로 수정
+  context: { params: { date?: string } } // ✅ context 객체를 사용하고 params 타입을 명시
 ) {
   try {
-    const { date } = params;
+    const { date } = context.params;
 
     if (!date) {
       return NextResponse.json(
