@@ -2,9 +2,17 @@ import path from "path";
 import fs from "fs/promises";
 import { NextResponse, NextRequest } from "next/server";
 
+interface Params {
+  date?: string;
+}
+
+interface Context {
+  params: Params;
+}
+
 export async function GET(
   request: NextRequest,
-  context: { params: { date?: string } } // ✅ context 객체를 사용하고 params 타입을 명시
+  context: Context // ✅ 명시적인 Context 타입 사용
 ) {
   try {
     const { date } = context.params;
