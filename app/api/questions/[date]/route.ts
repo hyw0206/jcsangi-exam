@@ -2,15 +2,12 @@ import path from "path";
 import fs from "fs/promises";
 import { NextResponse, NextRequest } from "next/server";
 
-// ✅ Next.js에서 제공하는 RouteParams 타입 import
-import { RouteParams } from 'next/server';
-
 export async function GET(
   request: NextRequest,
-  { params }: RouteParams<{ date: string }> // ✅ 정확한 타입 정의
+  { params }: { params: { date?: string } } // ✅ RouteParams 대신 직접 타입 정의
 ) {
   try {
-    const { date } = params; // ✅ params에서 date 직접 추출
+    const { date } = params;
 
     if (!date) {
       return NextResponse.json(
