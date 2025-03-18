@@ -4,7 +4,7 @@ import { NextResponse, NextRequest } from "next/server";
 
 export async function GET(
   request: NextRequest,
-  { params }: { params: { date?: string } } // ✅ RouteParams 대신 직접 타입 정의
+  { params }: { params: { date?: string | undefined } } // ✅ Next.js가 예상하는 타입으로 수정
 ) {
   try {
     const { date } = params;
