@@ -35,7 +35,7 @@ const shuffleArray = <T>(array: T[]): T[] => {
 
 // 테마별로 20개씩 문제를 가져오기
 export const getQuestionsByTheme = (): Record<number, Question[]> => {
-  const files = ["2022-1.json", "2022-2.json", "2022-3.json"];
+  const files = ["2022-1.json", "2022-2.json", "2022-3.json", "2023-1.json", "2023-2.json", "2023-3.json", "2024-1.json", "2024-2.json", "2024-3.json"];
   const allQuestions = loadQuestions(files);
   const grouped: Record<number, Question[]> = { 1: [], 2: [], 3: [] };
 
