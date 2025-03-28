@@ -55,7 +55,6 @@ export default function Home() {
     setResults([]);
     setShowResultPage(false);
 
-
     fetch(`/api/questions/${examDate}`)
       .then(async (res) => {
         if (!res.ok) {
@@ -104,7 +103,7 @@ export default function Home() {
     const handleKeyDown = (event: KeyboardEvent) => {
        if (showResultPage) return;
       if (event.key >= "1" && event.key <= "4") {
-         event.preventDefault(); 
+         event.preventDefault();
         const index = parseInt(event.key) - 1;
         setActiveButtonIndex(index);
         if (answerButtonsRef.current[index]) {
@@ -124,7 +123,7 @@ export default function Home() {
       isMounted = false;
       window.removeEventListener("keydown", handleKeyDown);
     };
-  }, [examDate, showResultPage]);
+  }, [examDate]);
 
 
   const handleAnswerClick = (selectedAnswerIndex: number) => {
@@ -149,13 +148,12 @@ export default function Home() {
         duration: 1000,
       });
 
-  
       handleNextQuestion();
- 
+
     }
   };
 
-  const handleNextQuestion = () => {
+   const handleNextQuestion = () => {
      setActiveButtonIndex(null);
      answerButtonsRef.current = [];
 
@@ -185,7 +183,8 @@ export default function Home() {
     }
  };
 
-  const showResults = () => {
+
+   const showResults = () => {
     const wrongAnswers = results.filter((result) => !result.isCorrect);
     const correctAnswers = results.filter((result) => result.isCorrect);
 
@@ -200,34 +199,26 @@ export default function Home() {
         (result) => result.isCorrect
       ).length;
       const wrongCount = themeQuestions.length - correctCount;
-      const totalQuestionsInTheme = themeQuestions.length;
-      const score = totalQuestionsInTheme > 0 ? Math.round((correctCount / totalQuestionsInTheme) * 100) : 0;
+      const score = correctCount * 5;
 
       return {
         themeName,
         correctCount,
         wrongCount,
         score,
-        totalQuestions: totalQuestionsInTheme
       };
     });
-
-    const totalCorrect = results.filter(r => r.isCorrect).length;
-    const totalQuestions = results.length;
-    const validThemeScores = themeResults.filter(r => r.totalQuestions > 0);
-    const overallAverage = validThemeScores.length > 0 ? Math.round(validThemeScores.reduce((sum, r) => sum + r.score, 0) / validThemeScores.length) : 0;
 
     return (
       <div className="flex flex-col items-center gap-4 p-4">
         <h2 className="text-2xl font-bold">문제 풀이 결과</h2>
 
-        <table className="border-collapse border border-gray-400 w-full max-w-xl text-center">
+        <table className="border-collapse border border-gray-400">
           <thead>
-            <tr className="bg-gray-100">
+            <tr>
               <th className="border border-gray-400 p-2">과목명</th>
               <th className="border border-gray-400 p-2">맞은 개수</th>
               <th className="border border-gray-400 p-2">틀린 개수</th>
-               <th className="border border-gray-400 p-2">총 문제</th>
               <th className="border border-gray-400 p-2">점수</th>
             </tr>
           </thead>
@@ -237,40 +228,47 @@ export default function Home() {
                 <td className="border border-gray-400 p-2">{themeResult.themeName}</td>
                 <td className="border border-gray-400 p-2">{themeResult.correctCount}</td>
                 <td className="border border-gray-400 p-2">{themeResult.wrongCount}</td>
-                 <td className="border border-gray-400 p-2">{themeResult.totalQuestions}</td>
-                <td className={`border border-gray-400 p-2 ${themeResult.score < 40 && themeResult.totalQuestions > 0 ? 'text-red-600 font-bold' : ''}`}>{themeResult.score}</td>
+                <td className="border border-gray-400 p-2">{themeResult.score}</td>
               </tr>
             ))}
           </tbody>
-           <tfoot>
-             <tr className="bg-gray-100">
-                <td className="border border-gray-400 p-2 font-bold text-center" colSpan={3}>
-                    총계 / 평균
-                </td>
-                 <td className="border border-gray-400 p-2 font-bold">
-                    {totalQuestions}
-                 </td>
-                 <td className={`border border-gray-400 p-2 font-bold ${overallAverage < 60 ? 'text-red-600' : 'text-green-600'}`}>
-                    {overallAverage}
-                 </td>
-             </tr>
+          <tfoot>
+            <tr>
+              <td className="border border-gray-400 p-2 font-bold text-center" colSpan={3}>
+                평균 점수
+              </td>
+              <td className="border border-gray-400 p-2 font-bold">
+                {
+                  (() => {
+                    const validResults = themeResults.filter(
+                      (result) => result.correctCount !== 0 || result.wrongCount !== 0
+                    );
+
+                    if (validResults.length === 0) return 0;
+
+                    const averageScore = Math.round(
+                      validResults.reduce((sum, result) => sum + result.score, 0) / validResults.length
+                    );
+
+                    return averageScore;
+                  })()
+                }
+              </td>
+            </tr>
           </tfoot>
         </table>
-         <div className="text-sm text-gray-600">한 과목 40점 미만 시 과락</div>
-         <div className={`text-sm font-bold ${overallAverage < 60 ? 'text-red-600' : 'text-green-600'}`}>
-            {overallAverage < 60 ? `평균 60점 미만 불합격` : `평균 60점 이상 합격`}
-         </div>
+        <div>한 과목 40점 미만일 시 과락</div>
+        <div>평균 60점 이상 시 합격</div>
 
         <button
-          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700 mt-4"
+          className="bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-700"
           onClick={() => window.location.reload()}
         >
           다시 풀기
         </button>
-
         {wrongAnswers.length > 0 && (
-          <div className="max-w-xl w-full mt-6">
-            <h3 className="text-2xl font-semibold mb-3 text-center">틀린 문제 다시보기</h3>
+          <div className="max-w-xl w-full mt-4">
+            <h3 className="text-2xl font-semibold">틀린 문제</h3>
             {themes.map((themeName, index) => {
               const themeNumber = index + 1;
               const themeWrongAnswers = wrongAnswers.filter(
@@ -279,19 +277,17 @@ export default function Home() {
               if (themeWrongAnswers.length === 0) return null;
 
               return (
-                <div key={themeNumber} className="mb-6">
-                  <h4 className="text-xl font-semibold mt-4 mb-2">{themeNumber}과목 : {themeName}</h4>
+                <div key={themeNumber}>
+                  <h4 className="text-lg font-semibold mt-4">{themeNumber}과목 : {themeName}</h4>
                   <ul>
-                    {themeWrongAnswers.map((result, idx) => (
-                      <li key={idx} className="mb-4 border p-4 rounded-md bg-red-50">
-                        <p className="text-sm text-gray-600 mb-2">{result.question.date}회 출제 문제</p>
-                        <div className="font-medium mb-3">{parse(result.question.question)}</div>
-                        <ul className="mb-3 space-y-1">
-                          {result.question.answers.map((item, ansIdx) => (
-                            <li key={ansIdx} className={`pl-4 ${ansIdx + 1 === result.question.correct ? 'text-green-700 font-bold' : ''} ${ansIdx + 1 === result.selectedAnswer ? 'line-through text-red-700' : ''}`}>
-                              {ansIdx + 1}. {parse(item)}
-                              {ansIdx + 1 === result.question.correct ? ' (정답)' : ''}
-                              {ansIdx + 1 === result.selectedAnswer && ansIdx + 1 !== result.question.correct ? ' (선택한 답)' : ''}
+                    {themeWrongAnswers.map((result, index) => (
+                      <li key={index} className="mb-2 border p-5">
+                        <p>{result.question.date}회 출제 문제</p>
+                        <p>{parse(result.question.question)}</p>
+                        <ul className="my-4">
+                          {result.question.answers.map((item, idx) => (
+                            <li key={idx}>
+                              {idx + 1}. {parse(item)}
                             </li>
                           ))}
                         </ul>
@@ -313,9 +309,9 @@ export default function Home() {
         )}
 
         {correctAnswers.length > 0 && (
-          <div className="max-w-xl w-full mt-6">
-            <h3 className="text-2xl font-semibold mb-3 text-center">맞은 문제 확인</h3>
-             {themes.map((themeName, index) => {
+          <div className="max-w-xl w-full mt-4">
+            <h3 className="text-2xl font-semibold">맞은 문제</h3>
+            {themes.map((themeName, index) => {
               const themeNumber = index + 1;
               const themeCorrectAnswers = correctAnswers.filter(
                 (result) => result.question.theme === themeNumber
@@ -323,28 +319,28 @@ export default function Home() {
               if (themeCorrectAnswers.length === 0) return null;
 
               return (
-                <div key={themeNumber} className="mb-6">
-                   <h4 className="text-xl font-semibold mt-4 mb-2">{themeNumber}과목 : {themeName}</h4>
+                <div key={themeNumber}>
+                  <h4 className="text-lg font-semibold mt-4">{themeNumber}과목 : {themeName}</h4>
                   <ul>
-                    {themeCorrectAnswers.map((result, idx) => (
-                       <li key={idx} className="mb-4 border p-4 rounded-md bg-green-50">
-                         <p className="text-sm text-gray-600 mb-2">{result.question.date}회 출제 문제</p>
-                         <div className="font-medium mb-3">{parse(result.question.question)}</div>
-                         <ul className="mb-3 space-y-1">
-                           {result.question.answers.map((item, ansIdx) => (
-                             <li key={ansIdx} className={`pl-4 ${ansIdx + 1 === result.question.correct ? 'text-green-700 font-bold' : ''}`}>
-                               {ansIdx + 1}. {parse(item)}
-                               {ansIdx + 1 === result.question.correct ? ' (정답)' : ''}
-                             </li>
-                           ))}
-                         </ul>
-                          {result.question.explanation && (
+                    {themeCorrectAnswers.map((result, index) => (
+                      <li key={index} className="mb-2 border p-5">
+                        <p>{result.question.date}회 출제 문제</p>
+                        <p>{parse(result.question.question)}</p>
+                        <ul className="mt-2">
+                          {result.question.answers.map((item, idx) => (
+                            <li key={idx}>
+                              {idx + 1}. {parse(item)}
+                            </li>
+                          ))}
+                        </ul>
+                        <p>정답: {result.question.correct}</p>
+                         {result.question.explanation && (
                              <div className="mt-3 p-3 bg-gray-100 rounded text-sm">
                                  <p className="font-semibold mb-1">해설:</p>
                                  {parse(result.question.explanation)}
                              </div>
                          )}
-                       </li>
+                      </li>
                     ))}
                   </ul>
                 </div>
@@ -356,12 +352,12 @@ export default function Home() {
     );
   };
 
-  if (showResultPage) {
+   if (showResultPage) {
     return showResults();
   }
 
   if (loading && !error) {
-    return <div className="flex justify-center items-center h-screen">Loading questions {examDate ? `for ${examDate}` : ''}...</div>;
+     return <div className="flex justify-center items-center h-screen">Loading questions {examDate ? `for ${examDate}` : ''}...</div>;
   }
 
   if (error) {
@@ -407,7 +403,6 @@ export default function Home() {
                 >
                   {index + 1}
                 </button>
-                {/* 원래 span 클래스 유지 */}
                 <span className="lg:text-xl text-3xl">
                   {parse(answer)}
                 </span>
