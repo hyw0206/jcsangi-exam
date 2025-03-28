@@ -35,6 +35,12 @@ export default function Home() {
     "2022-1",
     "2022-2",
     "2022-3",
+    "2023-1",
+    "2023-2",
+    "2023-3",
+    "2024-1",
+    "2024-2",
+    "2024-3",
   ];
 
   return (
@@ -51,7 +57,7 @@ export default function Home() {
               selectedMod === "random" ? "bg-blue-500 text-white" : "bg-white hover:bg-gray-100"
             }`}
           >
-            모의고사 (2021~2024 기출 문제 랜덤 출제)
+            모의고사 (2022~2024 기출 문제 랜덤 출제)
           </button>
           <button
             onClick={() => handleModChange("select")}
