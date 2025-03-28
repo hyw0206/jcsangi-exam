@@ -516,7 +516,7 @@
       "date": "2023-3"
     },
     {
-      "question": "다음 트리를 전위 순서(Pre-order)로 운행한 결과는?<br/><br/><div class='border p-4'>/* 이미지 설명: 루트 A, 왼쪽 자식 B, 오른쪽 자식 C. B는 왼쪽 자식 D. C는 왼쪽 자식 E, 오른쪽 자식 F. E는 왼쪽 자식 G, 오른쪽 자식 H. */<br/><img src='data:image/png;base64,...' alt='Binary Tree for Preorder Traversal'/> /* 실제 이미지 데이터는 생략 */</div>",
+      "question": "다음 트리를 전위 순서(Pre-order)로 운행한 결과는?<br/><br/><div class='border p-4'><img src='https://i.imgur.com/gfMvb5D.png'/> </div>",
       "answers": [
         "ABCDEFGH",
         "DBGHEFCA",

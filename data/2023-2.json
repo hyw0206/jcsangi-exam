@@ -600,7 +600,7 @@
       "date": "2023-2"
     },
     {
-      "question": "다음 이진 트리에 대한 Preorder 운행 결과는?<br/><br/><div class='border p-4'>/* 이미지 설명: 루트 A, 왼쪽 자식 B, 오른쪽 자식 C. B는 왼쪽 자식 D만 가짐. C는 왼쪽 자식 E, 오른쪽 자식 F를 가짐. */<br/><img src='data:image/png;base64,...' alt='Binary Tree for Traversal'/> /* 실제 이미지 데이터는 생략 */</div>",
+      "question": "다음 이진 트리에 대한 Preorder 운행 결과는?<br/><br/><div class='border p-4'><img src='https://i.imgur.com/jbfI1H2.png'/> </div>",
       "answers": [
         "ABCDEF",
         "DBAECF",
