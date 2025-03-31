@@ -118,6 +118,11 @@ export default function Home() {
     };
 
     window.addEventListener("keydown", handleKeyDown);
+    const metaTag = document.createElement("meta");
+    metaTag.name = "viewport";
+    metaTag.content = "width=device-width, initial-scale=0.5, maximum-scale=1.0, user-scalable=yes";
+
+    document.head.appendChild(metaTag);
 
     return () => {
       isMounted = false;
