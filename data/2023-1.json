@@ -396,7 +396,7 @@
       "date": "2023-1"
     },
     {
-      "question": "HTML5의 <input> 태그에서 반드시 입력되어야 할 필드를 만들 때 사용하는 속성은?",
+      "question": "HTML5의 &lt;input%gt; 태그에서 반드시 입력되어야 할 필드를 만들 때 사용하는 속성은?",
       "answers": [
         "essential",
         "required",
